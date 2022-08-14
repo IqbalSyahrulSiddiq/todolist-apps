@@ -80,15 +80,23 @@ class ItemsController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
-    {
-        DB::table('items')->where('id',$id)->update([
-            'name' => $request->name,
-            'updated_at' => \Carbon\Carbon::now()
-        ]);
-
-        return response([
-            'message' => 'success edited item'
-        ]);
+    {   $cek = DB::table('items')->where('id',$id)->first();
+        if( $cek <> NULL ){
+            DB::table('items')->where('id',$id)->update([
+                'name' => $request->name,
+                'completed' => $request->completed,
+                'updated_at' => \Carbon\Carbon::now()
+            ]);
+    
+            return response([
+                'message' => 'success edited item'
+            ]);
+        }else{
+            return response([
+                'message' => 'error, items not found'
+            ]);
+        }
+        
     }
 
     /**
