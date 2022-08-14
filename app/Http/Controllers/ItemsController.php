@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use DB;
 
 class ItemsController extends Controller
 {
@@ -13,7 +14,11 @@ class ItemsController extends Controller
      */
     public function index()
     {
-        //
+        $dataTask = DB::table('items')->orderBy('id','DESC')->get();
+        return response([
+            'message' => 'success',
+            'data' => $dataTask,
+        ]);
     }
 
     /**
@@ -34,7 +39,15 @@ class ItemsController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::table('items')->insert([
+            'name' => $request->name,
+            'created_at' => \Carbon\Carbon::now(),
+            'updated_at' => \Carbon\Carbon::now()
+        ]);
+
+        return response([
+            'message' => 'success add new item'
+        ]);
     }
 
     /**
@@ -68,7 +81,14 @@ class ItemsController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        DB::table('items')->where('id',$id)->update([
+            'name' => $request->name,
+            'updated_at' => \Carbon\Carbon::now()
+        ]);
+
+        return response([
+            'message' => 'success edited item'
+        ]);
     }
 
     /**
@@ -79,6 +99,10 @@ class ItemsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        DB::table('items')->where('id',$id)->delete();
+
+        return response([
+            'message' => 'success deleted item'
+        ]);
     }
 }
